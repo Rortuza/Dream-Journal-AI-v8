@@ -1,0 +1,26 @@
+:root{--bg-top:#f6f1ee;--bg-bottom:#ece9f0;--surface:#ffffffd9;--text:#2b2b2b;--muted:#6d6d6d;--accent:#a2b5f7;--accent-2:#90caf9;--border:#dedbe4;--ring:rgba(162,181,247,.35)}
+html[data-theme="night"]{--bg-top:#0f1220;--bg-bottom:#151828;--surface:#1d2033cc;--text:#e9ecff;--muted:#aab0cf;--accent:#8892ff;--accent-2:#7da2ff;--border:#2b2f4a;--ring:rgba(136,146,255,.35)}
+*{box-sizing:border-box}html,body{height:100%}html,body,.card,header,dialog{transition:background-color .25s ease,color .25s ease,box-shadow .25s ease}
+body{margin:0;font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(to bottom right,var(--bg-top),var(--bg-bottom));color:var(--text);line-height:1.6}
+.skip{position:absolute;left:-9999px;top:-9999px}.skip:focus{left:1rem;top:1rem;background:var(--surface);padding:.5rem .75rem;border-radius:10px}
+.site-header{position:sticky;top:0;z-index:5;background:linear-gradient(to bottom,rgba(255,255,255,.6),rgba(255,255,255,0));backdrop-filter:blur(6px)}
+.header-inner{display:flex;align-items:center;justify-content:space-between;gap:.5rem;padding-top:.8rem}.logo{font-weight:600;letter-spacing:.4px;color:#404567;margin:0}
+.nav{display:flex;gap:.5rem;flex-wrap:wrap}.header-right{display:flex;gap:.5rem}.search{display:flex;gap:.5rem;align-items:center;padding:.6rem 0 1rem}
+.wrap{max-width:1000px;margin:0 auto;padding:0 1rem}.view.hidden{display:none}
+.input,.textarea{width:100%;border:1px solid var(--border);border-radius:12px;padding:.65rem .8rem;background:#fcfbfd;color:var(--text);font-size:1rem;transition:border-color .2s ease,box-shadow .2s ease}
+.textarea{resize:vertical}.input:focus,.textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--ring)}
+.btn{border:1px solid var(--accent);background:var(--accent);color:#fff;padding:.55rem 1rem;border-radius:999px;cursor:pointer;font-size:.95rem;transition:transform .15s ease,filter .15s ease,background .2s ease}
+.btn:hover{transform:translateY(-1px);filter:brightness(1.03)}.btn:active{transform:translateY(0)}.btn-ghost{background:transparent;color:var(--text);border-color:var(--border)}.btn-small{padding:.3rem .6rem;font-size:.9rem}.file input{display:none}
+.form{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:1.2rem;margin:1rem 0 2rem;box-shadow:0 6px 18px rgba(0,0,0,.06)}
+.fieldset{border:1px solid var(--border);border-radius:14px;padding:1rem;background:rgba(255,255,255,.5)}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.8rem}.check{display:flex;align-items:center;gap:.5rem}.form-actions{display:flex;gap:.5rem}
+.cards{list-style:none;margin:1.5rem 0 3rem;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.2rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1rem 1.1rem;box-shadow:0 6px 18px rgba(0,0,0,.06);transition:transform .15s ease,box-shadow .15s ease;cursor:pointer}
+.card:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(0,0,0,.08)}.card h3{margin:.1rem 0 .35rem;font-weight:600;color:#3d3d6b}.card .muted{margin-top:-.2rem}
+.tagchip{display:inline-block;margin:.15rem .25rem 0 0;padding:.2rem .55rem;border-radius:999px;background:#eef2ff;color:#424874;font-size:.85rem}
+.empty{text-align:center;margin-top:2rem}
+dialog{border:none;border-radius:18px;background:var(--surface);padding:0}dialog::backdrop{background:rgba(0,0,0,.35);backdrop-filter:blur(4px)}
+.dialog-card{padding:1rem 1.1rem 1.2rem;min-width:300px;max-width:720px}.dialog-head{display:flex;align-items:center;justify-content:space-between;gap:.5rem}
+.kv{list-style:none;padding:0;margin:.6rem 0 1rem}.kv li{display:grid;grid-template-columns:1fr auto;gap:.8rem;padding:.3rem 0;border-bottom:1px dashed var(--border)}.kv li:last-child{border-bottom:none}
+.site-footer{text-align:center;padding:1.5rem 0 3rem}.muted{color:var(--muted);font-size:.95rem}
+.h2{margin:0 0 .6rem}.h3{margin:.2rem 0 .2rem}.h4{margin:.6rem 0 .4rem}
+.md h1,.md h2,.md h3{margin:.6rem 0 .3rem}.md p{margin:.4rem 0}.md ul{margin:.3rem 0 .6rem .9rem}

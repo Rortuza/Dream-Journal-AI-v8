@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dream Journal AI</title>
+  <meta name="description" content="A gentle, local-first dream journal with analysis and coaching tips">
+  <meta name="theme-color" content="#0f1220">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon-192.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=1762304544">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <h1 class="logo">Dream Journal AI</h1>
+      <nav class="nav" aria-label="Primary">
+        <button id="tab-home" class="btn" aria-controls="view-home">Entries</button>
+        <button id="tab-new" class="btn" aria-controls="view-new">New Entry</button>
+        <button id="tab-settings" class="btn btn-ghost" aria-controls="view-settings">Settings</button>
+        <button id="export" class="btn btn-ghost" title="Export all entries to CSV">Export CSV</button>
+      </nav>
+      <div class="header-right">
+        <button id="theme-toggle" class="btn" aria-pressed="false" title="Toggle theme">Theme</button>
+      </div>
+    </div>
+    <form id="search-form" class="search wrap" role="search" aria-label="Search entries">
+      <input id="q" class="input" placeholder="search text, supports multiple words" aria-label="Search text">
+      <input id="tag" class="input" placeholder="tags, comma or space separated" aria-label="Tag filter">
+      <label class="check" title="AND means all tags must match, OR means any">
+        Mode
+        <select id="mode" class="input">
+          <option value="OR">OR</option>
+          <option value="AND">AND</option>
+        </select>
+      </label>
+      <button type="submit" class="btn">Search</button>
+      <button type="button" id="clear-search" class="btn btn-ghost">Clear</button>
+    </form>
+  </header>
+
+  <main id="main" class="wrap">
+    <section id="view-home" class="view">
+      <canvas id="chart" width="900" height="220" aria-label="Nightmare index chart" role="img"></canvas>
+      <ul id="cards" class="cards" aria-live="polite" aria-busy="false"></ul>
+      <p id="empty" class="muted empty">No entries yet, write your first dream in the New Entry tab</p>
+    </section>
+
+    <section id="view-new" class="view hidden" aria-labelledby="new-title">
+      <form id="new-form" class="form" autocomplete="off">
+        <h2 id="new-title" class="h2">New dream</h2>
+        <label>Title
+          <input id="title" class="input" required>
+        </label>
+        <label>Tags
+          <input id="tags" class="input" placeholder="falling, exam, chase">
+        </label>
+        <label>Dream text
+          <textarea id="text" class="textarea" rows="10" placeholder="Markdown supported, e.g. **bold**, *italic*, lists, and # headings" required></textarea>
+        </label>
+        <fieldset class="fieldset">
+          <legend>Context</legend>
+          <div class="grid">
+            <label>Screen minutes last hour <input type="number" id="screen" class="input" min="0" value="0"></label>
+            <label>Caffeine mg today <input type="number" id="caffeine" class="input" min="0" value="0"></label>
+            <label>Minutes since last meal at sleep <input type="number" id="meal" class="input" min="0" value="0"></label>
+            <label>Workout minutes <input type="number" id="workout" class="input" min="0" value="0"></label>
+            <label>Stress 1 to 5 <input type="number" id="stress" class="input" min="1" max="5" value="3"></label>
+            <label class="check"><input type="checkbox" id="lucid"> Lucid</label>
+          </div>
+        </fieldset>
+        <div class="form-actions">
+          <button type="submit" class="btn">Save</button>
+          <button id="cancel-new" type="button" class="btn btn-ghost">Cancel</button>
+        </div>
+      </form>
+    </section>
+
+    <section id="view-edit" class="view hidden" aria-labelledby="edit-title">
+      <form id="edit-form" class="form" autocomplete="off">
+        <h2 id="edit-title" class="h2">Edit dream</h2>
+        <input type="hidden" id="edit-id">
+        <label>Title
+          <input id="edit-title-input" class="input" required>
+        </label>
+        <label>Tags
+          <input id="edit-tags" class="input" placeholder="falling, exam, chase">
+        </label>
+        <label>Dream text
+          <textarea id="edit-text" class="textarea" rows="10" placeholder="Markdown supported, e.g. **bold**, *italic*, lists, and # headings" required></textarea>
+        </label>
+        <fieldset class="fieldset">
+          <legend>Context</legend>
+          <div class="grid">
+            <label>Screen minutes last hour <input type="number" id="edit-screen" class="input" min="0" value="0"></label>
+            <label>Caffeine mg today <input type="number" id="edit-caffeine" class="input" min="0" value="0"></label>
+            <label>Minutes since last meal at sleep <input type="number" id="edit-meal" class="input" min="0" value="0"></label>
+            <label>Workout minutes <input type="number" id="edit-workout" class="input" min="0" value="0"></label>
+            <label>Stress 1 to 5 <input type="number" id="edit-stress" class="input" min="1" max="5" value="3"></label>
+            <label class="check"><input type="checkbox" id="edit-lucid"> Lucid</label>
+          </div>
+        </fieldset>
+        <div class="form-actions">
+          <button type="submit" class="btn">Save changes</button>
+          <button id="cancel-edit" type="button" class="btn btn-ghost">Cancel</button>
+        </div>
+      </form>
+    </section>
+    
+
+    <section id="view-settings" class="view hidden" aria-labelledby="settings-title">
+      <article class="form">
+        <h2 id="settings-title" class="h2">Settings</h2>
+        <div class="grid">
+          <div>
+            <p class="muted">Theme</p>
+            <button id="theme-day" class="btn">Day</button>
+            <button id="theme-night" class="btn btn-ghost">Night</button>
+          </div>
+          <div>
+            <p class="muted">Encryption</p>
+            <label class="check"><input id="enc-enabled" type="checkbox"> Enable encryption</label>
+            <label>Passphrase <input id="enc-pass" class="input" placeholder="set or change passphrase"></label>
+            <button id="enc-save" class="btn btn-ghost">Save passphrase</button>
+          </div>
+          <div>
+            <p class="muted">Data</p>
+            <button id="export-json" class="btn">Export JSON</button>
+            <label class="btn btn-ghost file">
+              Import JSON <input id="import-json" type="file" accept=".json">
+            </label>
+            <button id="wipe" class="btn btn-ghost" aria-describedby="wipe-note">Wipe all data</button>
+            <small id="wipe-note" class="muted">This removes all entries from this browser</small>
+          </div>
+          <div>
+            <p class="muted">Offline</p>
+            <label class="check"><input id="pwa-on" type="checkbox"> Enable service worker caching</label>
+            <button id="pwa-apply" class="btn btn-ghost">Apply</button>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <dialog id="detail">
+      <article class="dialog-card">
+        <header class="dialog-head">
+          <h3 id="d-title" class="h3"></h3>
+          <div style="display:flex;gap:.5rem;align-items:center"><button id="edit-entry" class="btn btn-small">Edit</button> <button id="delete-entry" class="btn btn-small btn-ghost" aria-label="Delete">Delete</button> <button id="close-detail" class="btn btn-small btn-ghost" aria-label="Close">Close</button></div>
+        </header>
+        <p class="muted" id="d-dt"></p>
+        <div id="d-text" class="md"></div>
+        <p class="tags" id="d-tags"></p>
+        <hr>
+        <h4 class="h4">Analysis</h4>
+        <ul class="kv">
+          <li><span>Sentiment</span> <strong id="d-sent"></strong></li>
+          <li><span>Primary emotion</span> <strong id="d-emotion"></strong></li>
+          <li><span>Nightmare index</span> <strong id="d-ni"></strong></li>
+        </ul>
+        <h4 class="h4">Context</h4>
+        <ul class="kv">
+          <li><span>Screen last hour</span> <strong id="d-screen"></strong> min</li>
+          <li><span>Caffeine</span> <strong id="d-caff"></strong> mg</li>
+          <li><span>Minutes since last meal</span> <strong id="d-meal"></strong></li>
+          <li><span>Workout</span> <strong id="d-work"></strong> min</li>
+          <li><span>Stress</span> <strong id="d-stress"></strong> of 5</li>
+          <li><span>Lucid</span> <strong id="d-lucid"></strong></li>
+        </ul>
+        <h4 class="h4">Coaching</h4>
+        <ul id="d-recs" class="list"></ul>
+      </article>
+    </dialog>
+  </main>
+
+  <footer class="site-footer">
+    <p class="muted">Local only, data stored on this device in your browser</p>
+  </footer>
+
+  <script src="db.js?v=1762304544"></script>
+  <script src="analysis.js?v=1762304544"></script>
+  <script src="crypto.js?v=1762304544"></script>
+  <script src="ui.js?v=1762304544"></script>
+  <script src="app.js?v=1762304544"></script>
+</body>
+</html>
