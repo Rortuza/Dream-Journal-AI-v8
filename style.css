@@ -24,3 +24,9 @@ dialog{border:none;border-radius:18px;background:var(--surface);padding:0}dialog
 .site-footer{text-align:center;padding:1.5rem 0 3rem}.muted{color:var(--muted);font-size:.95rem}
 .h2{margin:0 0 .6rem}.h3{margin:.2rem 0 .2rem}.h4{margin:.6rem 0 .4rem}
 .md h1,.md h2,.md h3{margin:.6rem 0 .3rem}.md p{margin:.4rem 0}.md ul{margin:.3rem 0 .6rem .9rem}
+html[data-theme="night"] .input,
+html[data-theme="night"] .textarea {
+  color: #000 !important;
+  background: #fcfbfd !important; /* or any light shade you like */
+}
+
