@@ -79,7 +79,11 @@ function drawChart(canvas, entries){
   if(!canvas) return;
   const ctx = canvas.getContext("2d");
   ctx.clearRect(0,0,canvas.width,canvas.height);
-  const data = entries.slice().reverse().slice(-30); // last 30 entries
+  ctx.strokeStyle = "rgba(0,0,0,0.08)";
+for(let y=0;y<=4;y++){ const yy = canvas.height*(y/4); ctx.beginPath(); ctx.moveTo(0,yy); ctx.lineTo(canvas.width,yy); ctx.stroke(); }
+ctx.fillStyle="rgba(0,0,0,0.35)"; ctx.font = Math.round(12*devicePixelRatio)+"px Inter, system-ui";
+ctx.fillText("Nightmare index, last 30", 8, 18*devicePixelRatio);
+const data = entries.slice().reverse().slice(-30); // last 30 entries
   if(!data.length){ return; }
   const w = canvas.width, h = canvas.height;
   const pad = 24;

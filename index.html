@@ -60,6 +60,7 @@
         <label>Tags
           <input id="tags" class="input" placeholder="falling, exam, chase">
         </label>
+        <div class="form-actions" id="md-bar"><button type="button" class="btn btn-ghost" data-md="**bold**">Bold</button> <button type="button" class="btn btn-ghost" data-md="*italic*">Italic</button> <button type="button" class="btn btn-ghost" data-md="- list">List</button></div>
         <label>Dream text
           <textarea id="text" class="textarea" rows="10" placeholder="Markdown supported, e.g. **bold**, *italic*, lists, and # headings" required></textarea>
         </label>
@@ -80,38 +81,6 @@
         </div>
       </form>
     </section>
-
-    <section id="view-edit" class="view hidden" aria-labelledby="edit-title">
-      <form id="edit-form" class="form" autocomplete="off">
-        <h2 id="edit-title" class="h2">Edit dream</h2>
-        <input type="hidden" id="edit-id">
-        <label>Title
-          <input id="edit-title-input" class="input" required>
-        </label>
-        <label>Tags
-          <input id="edit-tags" class="input" placeholder="falling, exam, chase">
-        </label>
-        <label>Dream text
-          <textarea id="edit-text" class="textarea" rows="10" placeholder="Markdown supported, e.g. **bold**, *italic*, lists, and # headings" required></textarea>
-        </label>
-        <fieldset class="fieldset">
-          <legend>Context</legend>
-          <div class="grid">
-            <label>Screen minutes last hour <input type="number" id="edit-screen" class="input" min="0" value="0"></label>
-            <label>Caffeine mg today <input type="number" id="edit-caffeine" class="input" min="0" value="0"></label>
-            <label>Minutes since last meal at sleep <input type="number" id="edit-meal" class="input" min="0" value="0"></label>
-            <label>Workout minutes <input type="number" id="edit-workout" class="input" min="0" value="0"></label>
-            <label>Stress 1 to 5 <input type="number" id="edit-stress" class="input" min="1" max="5" value="3"></label>
-            <label class="check"><input type="checkbox" id="edit-lucid"> Lucid</label>
-          </div>
-        </fieldset>
-        <div class="form-actions">
-          <button type="submit" class="btn">Save changes</button>
-          <button id="cancel-edit" type="button" class="btn btn-ghost">Cancel</button>
-        </div>
-      </form>
-    </section>
-    
 
     <section id="view-settings" class="view hidden" aria-labelledby="settings-title">
       <article class="form">
@@ -150,7 +119,7 @@
       <article class="dialog-card">
         <header class="dialog-head">
           <h3 id="d-title" class="h3"></h3>
-          <div style="display:flex;gap:.5rem;align-items:center"><button id="edit-entry" class="btn btn-small">Edit</button> <button id="delete-entry" class="btn btn-small btn-ghost" aria-label="Delete">Delete</button> <button id="close-detail" class="btn btn-small btn-ghost" aria-label="Close">Close</button></div>
+          <button id="close-detail" class="btn btn-small btn-ghost" aria-label="Close">Close</button>
         </header>
         <p class="muted" id="d-dt"></p>
         <div id="d-text" class="md"></div>
@@ -176,6 +145,8 @@
       </article>
     </dialog>
   </main>
+
+  <div id="toast" style="position:fixed;bottom:16px;right:16px;padding:.6rem .9rem;border-radius:12px;background:var(--surface);border:1px solid var(--border);box-shadow:0 6px 18px rgba(0,0,0,.12);opacity:0;transform:translateY(8px);transition:.2s;z-index:9999"></div>
 
   <footer class="site-footer">
     <p class="muted">Local only, data stored on this device in your browser</p>

@@ -24,9 +24,31 @@ dialog{border:none;border-radius:18px;background:var(--surface);padding:0}dialog
 .site-footer{text-align:center;padding:1.5rem 0 3rem}.muted{color:var(--muted);font-size:.95rem}
 .h2{margin:0 0 .6rem}.h3{margin:.2rem 0 .2rem}.h4{margin:.6rem 0 .4rem}
 .md h1,.md h2,.md h3{margin:.6rem 0 .3rem}.md p{margin:.4rem 0}.md ul{margin:.3rem 0 .6rem .9rem}
-html[data-theme="night"] .input,
-html[data-theme="night"] .textarea {
-  color: #000 !important;
-  background: #fcfbfd !important; /* or any light shade you like */
-}
 
+
+/* --- UX polish additions --- */
+.input,.textarea { box-shadow: 0 1px 0 rgba(0,0,0,.04) inset; }
+html[data-theme="night"] .card,
+html[data-theme="night"] .form { box-shadow: 0 8px 24px rgba(0,0,0,.25); }
+.btn { will-change: transform; }
+.input:focus,.textarea:focus { box-shadow: 0 0 0 3px var(--ring), 0 2px 8px rgba(0,0,0,.07); }
+.card:hover { transform: translateY(-3px) scale(1.01); }
+
+.empty { opacity:.9; font-size:1.05rem; }
+.empty::after { content:"  → click New Entry to start"; color:var(--muted); }
+
+/* Tag chip color variety */
+.tagchip { background:#eef2ff; }
+.tagchip:nth-child(4n+1){ background:#e8f5e9; }
+.tagchip:nth-child(4n+2){ background:#fff3e0; }
+.tagchip:nth-child(4n+3){ background:#e3f2fd; }
+
+/* Sticky search row */
+.search { position: sticky; top: 56px; z-index:4; background:linear-gradient(to bottom, var(--surface), transparent); padding-bottom:.8rem; }
+
+/* Dark mode input legibility */
+html[data-theme="night"] .input,
+html[data-theme="night"] .textarea { color:#000 !important; background:#fcfbfd !important; }
+.input,.textarea { color:#1a1a1a; background:#fcfbfd; }
+html[data-theme="night"] .input::placeholder,
+html[data-theme="night"] .textarea::placeholder { color:#6d6d6d; opacity:1; }

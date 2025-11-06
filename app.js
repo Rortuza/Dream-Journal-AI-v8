@@ -14,37 +14,8 @@ qs("tab-new").onclick = ()=> show("view-new");
 qs("tab-settings").onclick = ()=> show("view-settings");
 qs("cancel-new").onclick = ()=> show("view-home");
 
-// Edit cancel
-qs("cancel-edit").onclick = ()=>{ __editingId=null; show("view-home"); };
-
-// Edit submit
-qs("edit-form").onsubmit = async (e)=>{
-  e.preventDefault();
-  if(__editingId==null) return;
-  const title=qs("edit-title-input").value.trim()||"Untitled";
-  const text =qs("edit-text").value.trim();
-  const tags =qs("edit-tags").value.trim();
-  const screen = parseInt(qs("edit-screen").value||"0",10);
-  const caffeine = parseInt(qs("edit-caffeine").value||"0",10);
-  const meal = parseInt(qs("edit-meal").value||"0",10);
-  const workout = parseInt(qs("edit-workout").value||"0",10);
-  const stress = parseInt(qs("edit-stress").value||"3",10);
-  const lucid = qs("edit-lucid").checked;
-  const sent = sentiment(text);
-  const emo  = emotionPrimary(text);
-  const ni   = nightmareIndex(text, sent);
-  const entry = { id: __editingId, dt: fmtDateISO(), title, text, tags, sentiment: sent, emotion_primary: emo, nightmare_index: ni,
-    caffeine_mg: caffeine, last_meal_min_before_sleep: meal, screen_min_last_hr: screen, workout_min: workout, stress_1_5: stress, lucid };
-  await DB.update(idb, entry);
-  __editingId=null;
-  await refresh();
-  show("view-home");
-};
-
 // DB open
 let idb;
-let __currentDetailId = null;
-let __editingId = null;
 DB.open().then(db=>{ idb=db; refresh(); });
 
 // Autosave draft
@@ -90,6 +61,8 @@ qs("new-form").onsubmit = async (e)=>{
   qs("new-form").reset();
   await refresh();
   show("view-home");
+  toast("Saved");
+  setTimeout(()=>confetti(),50);
 };
 
 // Render list and detail
@@ -110,7 +83,6 @@ function renderList(list){
   [...cards.querySelectorAll(".card")].forEach(li=> li.onclick = ()=> openDetail(list.find(x=> x.id==li.dataset.id)));
 }
 function openDetail(e){
-  __currentDetailId = e.id;
   const dlg=qs("detail");
   qs("d-title").textContent=e.title;
   qs("d-dt").textContent=e.dt;
@@ -133,16 +105,7 @@ function openDetail(e){
   qs("d-recs").innerHTML = recs.map(r=> `<li>${escapeHtml(r)}</li>`).join("");
   dlg.showModal();
   qs("close-detail").onclick = ()=> dlg.close();
-  qs("edit-entry").onclick = ()=>{ dlg.close(); populateEdit(e); show("view-edit"); };
-  qs("delete-entry").onclick = async ()=>{
-    if(!__currentDetailId) return;
-    if(confirm("Delete this entry? This cannot be undone.")){
-      await DB.remove(idb, __currentDetailId);
-      __currentDetailId = null;
-      dlg.close();
-      await refresh();
-    }
-  };
+  dlg.addEventListener("click", ev=>{ if(ev.target===dlg) dlg.close(); }, { once:true });
 }
 
 // Search
@@ -250,15 +213,59 @@ addEventListener("load", ()=>{
 });
 
 
-function populateEdit(e){
-  __editingId = e.id;
-  qs("edit-title-input").value = e.title || "";
-  qs("edit-tags").value = e.tags || "";
-  qs("edit-text").value = e.text || "";
-  qs("edit-screen").value = e.screen_min_last_hr || 0;
-  qs("edit-caffeine").value = e.caffeine_mg || 0;
-  qs("edit-meal").value = e.last_meal_min_before_sleep || 0;
-  qs("edit-workout").value = e.workout_min || 0;
-  qs("edit-stress").value = e.stress_1_5 || 3;
-  qs("edit-lucid").checked = !!e.lucid;
+function toast(msg){
+  const t=qs("toast"); if(!t) return;
+  t.textContent=msg;
+  t.style.opacity=1; t.style.transform="translateY(0)";
+  clearTimeout(t.__to); t.__to = setTimeout(()=>{ t.style.opacity=0; t.style.transform="translateY(8px)"; }, 1800);
+}
+
+document.addEventListener("input", e=>{
+  if(e.target && e.target.matches("textarea")){
+    e.target.style.height = "auto";
+    e.target.style.height = e.target.scrollHeight + "px";
+  }
+});
+
+addEventListener("keydown", e=>{
+  const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : "";
+  if(tag==="input" || tag==="textarea") return;
+  if(e.key==="n"){ show("view-new"); }
+  if(e.key==="e"){ show("view-home"); }
+  if(e.key==="/"){ e.preventDefault(); const qEl=qs("q"); if(qEl){ qEl.focus(); } }
+  if(e.key.toLowerCase()==="u" && window.__lastDeleted){
+    DB.add(idb, window.__lastDeleted).then(()=>{ window.__lastDeleted=null; refresh(); toast("Restored"); });
+  }
+});
+
+const __mdbar = qs("md-bar");
+if(__mdbar){
+  __mdbar.addEventListener("click", e=>{
+    const btn = e.target.closest("[data-md]"); if(!btn) return;
+    const ta = qs("text"); if(!ta) return;
+    const ins = btn.dataset.md;
+    const start = ta.selectionStart, end = ta.selectionEnd;
+    ta.setRangeText(ins, start, end, "end");
+    ta.dispatchEvent(new Event("input"));
+    ta.focus();
+  });
+}
+
+function confetti(x=window.innerWidth-40,y=window.innerHeight-40){
+  const n=18;
+  for(let i=0;i<n;i++){
+    const p=document.createElement("i");
+    Object.assign(p.style,{
+      position:"fixed",left:x+"px",top:y+"px",width:"6px",height:"6px",
+      background:`hsl(${Math.random()*360},80%,60%)`,borderRadius:"2px",
+      transform:`translate(${(Math.random()*2-1)*120}px,${-Math.random()*220}px)`,
+      opacity:0,transition:"transform .8s ease, opacity .8s ease",zIndex:10000
+    });
+    document.body.appendChild(p);
+    requestAnimationFrame(()=>{
+      p.style.opacity=1;
+      p.style.transform=`translate(${(Math.random()*2-1)*120}px,${(Math.random()*-1)*260}px)`;
+      setTimeout(()=>p.remove(),820);
+    });
+  }
 }
